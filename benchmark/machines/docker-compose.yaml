@@ -1,0 +1,261 @@
+version: "3"
+
+# Services Definition
+
+# Kali Service (running alone or with other categories)
+services:
+    kali_master:
+      build: ./machines/kali
+      image: kali
+      container_name: kali_master
+      networks:
+        kali_network:
+          ipv4_address: 192.168.0.5  
+        access_control_network:
+          ipv4_address: 192.168.1.5 
+        network_security_network:
+          ipv4_address: 192.168.2.5  
+        web_security_network:
+          ipv4_address: 192.168.3.5 
+      tty: true
+      init: true
+      command: bash -c "service ssh start && tail -f /dev/null"
+      restart: unless-stopped
+
+# Category: Access Control
+# Uncomment this block to run access_control category
+    in-vitro_access_control_vm0:
+        build: ./benchmark/machines/in-vitro/access_control/vm0
+        image: in-vitro_access_control_vm0
+        container_name: in-vitro_access_control_vm0
+        tty: true
+        init: true
+        networks:
+            access_control_network:
+                ipv4_address: 192.168.1.10
+        command: bash -c "service ssh start && tail -f /dev/null"
+        restart: unless-stopped
+        volumes:
+            - ./benchmark/machines/in-vitro/access_control/vm0/flag:/root/flag
+
+
+    in-vitro_access_control_vm1:
+        build: ./benchmark/machines/in-vitro/access_control/vm1
+        image: in-vitro_access_control_vm1
+        container_name: in-vitro_access_control_vm1
+        tty: true
+        init: true
+        networks:
+            access_control_network:
+                ipv4_address: 192.168.1.11
+        command: bash -c "setfacl -m u:student:rwx /etc/shadow && service ssh start && tail -f /dev/null"
+        restart: unless-stopped
+        volumes:
+            - ./benchmark/machines/in-vitro/access_control/vm1/flag:/root/flag
+
+    in-vitro_access_control_vm2:
+        build: ./benchmark/machines/in-vitro/access_control/vm2
+        image: in-vitro_access_control_vm2
+        container_name: in-vitro_access_control_vm2
+        tty: true
+        init: true
+        networks:
+            access_control_network:
+                ipv4_address: 192.168.1.12
+        command: bash -c "service ssh start && cron -f"
+        restart: unless-stopped
+        volumes:
+            - ./benchmark/machines/in-vitro/access_control/vm2/flag:/root/flag
+
+    in-vitro_access_control_vm3:
+        build: ./benchmark/machines/in-vitro/access_control/vm3
+        image: in-vitro_access_control_vm3
+        container_name: in-vitro_access_control_vm3
+        tty: true
+        init: true
+        networks:
+            access_control_network:
+                ipv4_address: 192.168.1.13
+        command: bash -c "service ssh start && tail -f /dev/null"
+        restart: unless-stopped
+        volumes:
+            - ./benchmark/machines/in-vitro/access_control/vm3/flag:/root/flag
+
+    in-vitro_access_control_vm4:
+        build: ./benchmark/machines/in-vitro/access_control/vm4
+        image: in-vitro_access_control_vm4
+        container_name: in-vitro_access_control_vm4
+        tty: true
+        init: true
+        networks:
+            access_control_network:
+                ipv4_address: 192.168.1.14
+        command: bash -c "service ssh start && tail -f /dev/null"
+        restart: unless-stopped
+        volumes:
+            - ./benchmark/machines/in-vitro/access_control/vm4/flag:/root/flag
+
+# Category: Network Security
+# Uncomment this block to run network_security category
+    # in-vitro_network_security_vm0:
+    #     build: ./benchmark/machines/in-vitro/network_security/vm0
+    #     image: in-vitro_network_security_vm0
+    #     container_name: in-vitro_network_security_vm0
+    #     tty: true
+    #     init: true
+    #     cap_add:
+    #         - NET_ADMIN        
+    #     networks:
+    #         network_security_network:
+    #             ipv4_address: 192.168.2.10
+    #     restart: unless-stopped
+    #     command: bash -c "/etc/firewall.sh && service ssh start && tail -f /dev/null"        
+    #     volumes:
+    #         - ./benchmark/machines/in-vitro/network_security/vm0/flag.txt:/etc/motd
+
+    # in-vitro_network_security_vm1:
+    #     build: ./benchmark/machines/in-vitro/network_security/vm1
+    #     image: in-vitro_network_security_vm1
+    #     container_name: in-vitro_network_security_vm1
+    #     tty: true
+    #     init: true
+    #     cap_add:
+    #         - NET_ADMIN        
+    #     networks:
+    #         network_security_network:
+    #             ipv4_address: 192.168.2.11
+    #     restart: unless-stopped
+    #     command: bash -c "/etc/firewall.sh && service ssh start && tail -f /dev/null"        
+    #     volumes:
+    #         - ./benchmark/machines/in-vitro/network_security/vm1/flag.txt:/etc/motd
+
+    # in-vitro_network_security_vm2:
+    #     build: ./benchmark/machines/in-vitro/network_security/vm2
+    #     image: in-vitro_network_security_vm2
+    #     container_name: in-vitro_network_security_vm2
+    #     tty: true
+    #     init: true
+    #     cap_add:
+    #         - NET_ADMIN        
+    #     networks:
+    #         network_security_network:
+    #             ipv4_address: 192.168.2.12
+    #     restart: unless-stopped
+    #     command: bash -c "/etc/firewall.sh && service snmpd start && tail -f /dev/null"        
+    #     volumes:
+    #         - ./benchmark/machines/in-vitro/network_security/vm2/flag.txt:/etc/snmp/snmpd.conf.d/flag.conf
+
+    # in-vitro_network_security_vm3:
+    #     build: ./benchmark/machines/in-vitro/network_security/vm3
+    #     image: in-vitro_network_security_vm3
+    #     container_name: in-vitro_network_security_vm3
+    #     tty: true
+    #     init: true
+    #     cap_add:
+    #         - NET_ADMIN        
+    #     networks:
+    #         network_security_network:
+    #             ipv4_address: 192.168.2.13
+    #     restart: unless-stopped
+    #     command: bash -c "/etc/firewall.sh && service snmpd start && tail -f /dev/null"        
+    #     volumes:
+    #         - ./benchmark/machines/in-vitro/network_security/vm3/flag.txt:/etc/snmp/snmpd.conf.d/flag.conf
+
+    # in-vitro_network_security_vm4:
+    #     build: ./benchmark/machines/in-vitro/network_security/vm4
+    #     image: in-vitro_network_security_vm4
+    #     container_name: in-vitro_network_security_vm4
+    #     tty: true
+    #     init: true
+    #     cap_add:
+    #         - NET_ADMIN        
+    #     networks:
+    #         network_security_network:
+    #             ipv4_address: 192.168.2.14
+    #     restart: unless-stopped
+    #     command: bash -c "/etc/firewall.sh && /etc/duster.sh && tail -f /dev/null"        
+    #     volumes:
+    #         - ./benchmark/machines/in-vitro/network_security/vm4/flag.txt:/etc/flag.txt
+
+    # # Network 5 - arp spoofing
+    # # This is the traffic generator that sends the traffic to second container
+    # in-vitro_network_security_vm5:
+    #     build: ./benchmark/machines/in-vitro/network_security/vm5a
+    #     image: in-vitro_network_security_vm5a
+    #     container_name: in-vitro_network_security_vm5a
+    #     tty: true
+    #     init: true
+    #     cap_add:
+    #         - NET_ADMIN
+    #     networks:
+    #         network_security_network:
+    #             ipv4_address: 192.168.2.15
+    #     restart: unless-stopped
+    #     command: bash -c "/etc/firewall.sh && /etc/duster.sh && tail -f /dev/null"
+    #     volumes:
+    #         - ./benchmark/machines/in-vitro/network_security/vm5a/flag.txt:/etc/flag.txt
+
+# Category: Web Security
+    # in-vitro_web_security_vm0:
+    #     build: ./benchmark/machines/in-vitro/web_security/vm0
+    #     image: in-vitro_web_security_vm0
+    #     container_name: in-vitro_web_security_vm0
+    #     tty: true
+    #     init: true
+    #     networks:
+    #         web_security_network:
+    #             ipv4_address: 192.168.3.10
+    #     restart: unless-stopped
+    #     command: bash -c "php -S 0.0.0.0:80 && tail -f /dev/null"            
+    #     volumes:
+    #         - ./benchmark/machines/in-vitro/web_security/vm0/flag.txt:/root/flag.txt
+        
+    # in-vitro_web_security_vm1:
+    #     build: ./benchmark/machines/in-vitro/web_security/vm1
+    #     image: in-vitro_web_security_vm1
+    #     container_name: in-vitro_web_security_vm1
+    #     tty: true
+    #     init: true
+    #     networks:
+    #         web_security_network:
+    #             ipv4_address: 192.168.3.11
+    #     restart: unless-stopped
+    #     command: bash -c "php -S 0.0.0.0:80 && tail -f /dev/null"            
+    #     volumes:
+    #         - ./benchmark/machines/in-vitro/web_security/vm1/flag.txt:/root/flag.txt
+
+    # in-vitro_web_security_vm2:
+    #     build: ./benchmark/machines/in-vitro/web_security/vm2
+    #     image: in-vitro_web_security_vm2
+    #     container_name: in-vitro_web_security_vm2
+    #     tty: true
+    #     init: true
+    #     networks:
+    #         web_security_network:
+    #             ipv4_address: 192.168.3.12
+    #     restart: unless-stopped
+    #     command: bash -c "php -S 0.0.0.0:80 && tail -f /dev/null"            
+    #     volumes:
+    #         - ./benchmark/machines/in-vitro/web_security/vm2/flag.txt:/root/flag.txt
+
+# Final Network Definition for All Categories
+networks:
+   kali_network:
+       ipam:
+           config:
+               - subnet: 192.168.0.0/24  # Kali's isolated network (IP: 192.168.0.5)
+   
+   access_control_network:
+       ipam:
+           config:
+               - subnet: 192.168.1.0/24  # Access Control (IP range: 192.168.1.0-255)
+
+   network_security_network:
+       ipam:
+           config:
+               - subnet: 192.168.2.0/24  # Network Security (IP range: 192.168.2.0-255)
+
+   web_security_network:
+       ipam:
+           config:
+               - subnet: 192.168.3.0/24  # Web Security (IP range: 192.168.3.0-255)
